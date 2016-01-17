@@ -13,13 +13,54 @@ ERROR CASES: Return NULL for invalid inputs.
 
 NOTES:
 */
-
+#include<stdio.h>
+#include<stdlib.h>
 struct transaction {
 	int amount;
 	char date[11];
 	char description[20];
 };
-
+int* dateConverter(char *);
 int countGreaterNumbers(struct transaction *Arr, int len, char *date) {
-	return -1;
+	if (len <= 0 || Arr == NULL || date == NULL)
+		return -1;
+	int greaterNumber = 0;
+	int *keyDate = dateConverter(date);
+	int *intDate;
+	for (int index = 0; index < len; index++){
+		intDate = dateConverter(Arr[index].date);
+		if (keyDate[2] < intDate[2]){
+			greaterNumber++;
+		}
+		else if (keyDate[2] == intDate[2]){
+			if (keyDate[1] < intDate[1]){
+				greaterNumber++;
+			}
+			else if (keyDate[1] == intDate[1]){
+				if (keyDate[0] < intDate[0]){
+					greaterNumber++;
+				}
+			}
+		}
+
+	}
+	return greaterNumber;
 }
+
+int* dateConverter(char *date){
+	int j = 0;
+	int num = 0;
+	int * x = (int *)malloc(sizeof(int) * 3);
+	for (int i = 0; date[i] != '\0'; i++){
+		if (date[i] == '-'){
+			x[j] = num / 10;
+			j += 1;
+			num = 0;
+		}
+		else
+			num = (num + (date[i] - '0')) * 10;
+	}
+	x[j] = num / 10;
+	return x;
+}
+
